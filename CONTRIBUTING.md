@@ -1,7 +1,7 @@
 Contributing to Survey Data Collection repositories
 ===================================================
 
-* We use github-flow - create a branch from master with a short, concise, name, e.g. (nb. there are no specific prefixes):
+* We use [github-flow](http://scottchacon.com/2011/08/31/github-flow.html) - create a branch from master with a short, concise, name, e.g. (nb. there are no specific prefixes):
     * add-user-auth
     * fix-ioloop-bug
     * update-cryptography-version
