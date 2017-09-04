@@ -10,7 +10,7 @@ business systems.
   - [Contributing](CONTRIBUTING.md)
 
 
-## Licence
+## License
 
 Copyright ©‎ 2017, Crown Copyright (Office for National Statistics)
 
