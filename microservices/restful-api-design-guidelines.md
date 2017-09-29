@@ -35,7 +35,6 @@ Primary resource identifiers within JSON responses should use an `id` attribute.
   "id": "c6467711-21eb-4e78-804c-1db8392f93fb",
   "surveyID": "cb0711c3-0ac8-41d3-ae0e-567e5ea1ef87",
   "surveyRef": "221"
-  ...
 }
 ```
 
