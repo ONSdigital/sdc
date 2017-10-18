@@ -20,6 +20,7 @@ The following rules must be adhered to during UUID generation:
 * UUIDs must be generated using the version 4 (random) algorithm
 * UUIDs must be generated within the application code (examples are given below), not within the database. This avoids the problem whereby every time you need to insert an entity, you need the database to give you its primary key i.e. the entities in your code are incomplete until you talk to the database
 * UUIDs must be stored in lowercase using the 8-4-4-4-12 format e.g: `123e4567-e89b-12d3-a456-426655440000`
+* See [RFC 4122](https://tools.ietf.org/html/rfc4122) for full details of UUIDs
 
 ## URNs
 The use of [Uniform Resource Names](https://en.wikipedia.org/wiki/Uniform_Resource_Name) (URNs) was considered, but rejected. URNs allow the identity of a RESTful resource (object) to be separated from its location. A good analogy is to think of how we generally refer to people by their name rather than their home address, because the latter can change. Using URNs requires the use of a URN resolver, which is like an address book that looks up the URN it is given and produces the [Uniform Resource Identifier](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) (URI) where that resource can be found. The use of a URN resolver increases network traffic because every reference to a resource requires an additional call to look up its location.
