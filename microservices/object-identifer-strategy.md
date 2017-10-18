@@ -11,11 +11,9 @@ The proposed solution must adhere to the following principles:
 * The identifier should be sufficient to uniquely identify an object and verify if two instances are the same object
 
 ## Approach
-Objects passed between microservices, either via a RESTful API or a queue, will be assigned a [Universally Unique IDentifier (UUID)](https://en.wikipedia.org/wiki/Universally_unique_identifier) exposed to other microservices within an `id` field contained in the response JSON or queue message. A database column named `id` should be used to store this value and this column must have a unique constraint.
+Objects passed between microservices, either via a RESTful API or a queue, will be assigned a [Universally Unique IDentifier (UUID)](https://en.wikipedia.org/wiki/Universally_unique_identifier) exposed to other microservices within an `id` field contained in the response JSON or queue message.
 
 The use of UUIDs as object identifiers avoids the problem of surfacing predictable IDs, which in particular can cause problems within user interfaces by exposing a count of records, or prompting an attacker to try substituting a different integer ID within a URL in an attempt to retrieve someone else's data. This second issue should always be mitigated by an authorisation check within the application code, but it's even better not to invite it in the first place.
-
-Microservices should use auto-incrementing integers as database primary keys (or a natural key) in preference to using the generated UUID as the primary key. This is because integer keys have better performance characteristics within a database index than UUIDs, due to the random nature of the latter. Non-UUID primary keys are also friendlier to use when writing SQL `WHERE` clauses by hand. The database primary key must never be exposed outside the microservice, but it may be used by the microservice code internally.
 
 The following rules must be adhered to during UUID generation:
 
