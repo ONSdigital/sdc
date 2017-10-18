@@ -7,7 +7,9 @@ This page documents some guidelines to be used when designing and specifying RES
 We will not be building full [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS)-complaint APIs as there is currently no clear requirement for the SDC platform that justifies the additional development complexity and effort.
 
 ## URIs
-URIs should be all lowercase. The primary means for identifying a resource to access is via its UUID, as per the object identity strategy. The UUID should appear after the plural resource name without further qualification:
+URIs should be all lowercase.
+
+As implementated within Respondent Account Services (RAS) and Response Management (RM), the primary means for identifying a resource to access is via its UUID, as per the object identity strategy. The UUID should appear after the plural resource name without further qualification:
 
 `GET /collectionexercises/2c82b85a-2a03-434d-8019-eae05b01c6f4`
 
@@ -20,15 +22,14 @@ Resource names in URIs should be pluralised, apart from where the identity of a 
 `GET /collectionexercises/survey/cb0711c3-0ac8-41d3-ae0e-567e5a1ef87`
 
 ## HTTP Status Codes
-Endpoints should return the appropriate HTTP status code. Including, but not limited to:
-
-* `HTTP 201 Created` - when a resource has been created
-* `HTTP 204 No Content` - when a request for a list of resources returns an empty list
-* `HTTP 400 Bad Request` - when invalid request parameters are supplied
-* `HTTP 404 Not Found` - when the requested resource could not be found
+Endpoints should return the [appropriate HTTP status code](https://httpstatuses.com/).
 
 ## JSON Responses
-Primary resource identifiers within JSON responses should use an `id` attribute. Attributes that reference secondary resource types should be named with the resource type name in camel case with an `ID` suffix. External references i.e. identifiers that have a meaning to the business and are used outside the platform (e.g. reporting unit reference, case reference etc.) should be named with a `Ref` suffix:
+* Primary resource identifiers within JSON responses should use an `id` attribute
+* Attributes that reference secondary resource types should be named with the resource type name in camel case with an `ID` suffix
+* External references i.e. identifiers that have a meaning to the business and are used outside the platform (e.g. reporting unit reference, case reference etc.) should be named with a `Ref` suffix
+
+Example:
 
 ```json
 {
