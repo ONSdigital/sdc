@@ -1,4 +1,4 @@
-# 1. Godaddy structured JSON logger for Java services
+# 2. Godaddy structured JSON logger for Java services
 
 Date: 17/08/2018
 
