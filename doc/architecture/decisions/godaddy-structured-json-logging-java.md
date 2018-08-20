@@ -1,10 +1,4 @@
-# 2. Godaddy structured JSON logger for Java services
-
-Date: 17/08/2018
-
-## Status
-
-Proposed
+# Godaddy structured JSON logger for Java services
 
 ## Context
 
