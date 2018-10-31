@@ -1,6 +1,9 @@
 # SPIKE REPORT
 
-## Case group currently holds two unique identifiers for a business with the business party id and sample unit ref. This is unnecessary only one is needed. Business party id is left empty for social cases.
+Case group currently holds two unique identifiers for a business with the business party id and sample unit ref. This is unnecessary only one is needed. Business party id is left empty for social cases.
+
+
+## Case Service
 
 ### Usages of `partyId` Lombok builder method
 ```
@@ -65,6 +68,43 @@ TOTAL: 1
 testCreateCaseAndCaseGroupWithoutChildFromMessage()
 testCreateCaseAndCaseGroupWithChildFromMessage()
 CaseService.createNewCaseGroup()
+```
+TOTAL: 3 (2 tests)
+
+
+## Action Service
+
+### Usages of `getSampleUnitRef`
+```
+SampleAttributes.decorateActionRequest()
+SampleUnitRefAddress.decorateActionRequest()
+```
+TOTAL: 3
+
+### Usages of `setPartyId`
+```
+mockCaseDetailsMock()
+```
+TOTAL: 1 (1 test)
+
+
+## Party Service
+
+### Usages of `/casegroups/partyid/{partyId}` REST API endpoint
+```
+account_controller.py - request_casegroups_for_business
+mocks.py - MockRequests
+```
+TOTAL: 2 (1 test)
+
+
+## Response Operations UI
+
+### Usages of `/casegroups/partyid/{partyId}` REST API endpoint
+```
+case_controller.py - get_case_groups_by_business_party_id
+test_change_response_status.py - url_get_case_groups_by_business_party_id
+test_reporting_units.py - url_get_casegroups_by_business_party_id
 ```
 TOTAL: 3 (2 tests)
 
