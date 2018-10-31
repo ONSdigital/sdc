@@ -108,3 +108,11 @@ test_reporting_units.py - url_get_casegroups_by_business_party_id
 ```
 TOTAL: 3 (2 tests)
 
+
+## CONCLUSIONS
+
+The least impact and easiest change would be to remove the sampleUnitRef, because it doesn't change the interface contract, however the party ID is null for social cases, which seems inconsistent, although perhaps the only impact would be on reporting.
+
+In the author's opinion, the correct thing to do is to use the RU/sampleUnitRef and get rid of the party ID. This requires changes to the REST API and the clients which use it.
+
+The highest impact change will affect Case, Action, Party and the Response Operations UI, which would be a minimum of 4 PRs, but it seems to leave the code and data in the tidiest state eventually, although it requires more work.
