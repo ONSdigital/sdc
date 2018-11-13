@@ -2,7 +2,7 @@
 
 ## Introduction
 
-It was noted that there had been a considerable degradation in the performance of the Action service since a major piece of refactoring had occurred. 350,000 actions are presently taking circa 14 hours to process, when before parts of the process had taken a tiny fraction of the time.
+It was noted that there had been a considerable degradation in the performance of the Action service since a major piece of refactoring had occurred. 350,000 actions are presently taking circa 14 hours to process, when previously parts of the process had taken a tiny fraction of that time - perhaps only an hour or two to create and 'distribute' 100,000 actions.
 
 ## Creation of Actions
 
@@ -30,7 +30,7 @@ The performance of Hibernate inserting rows into Postgres was surprisingly slow,
 
 ### Conclusion
 
-The stored procedure or native SQL in the code was able to perform the same function as the current code in a few seconds, as opposed to many hours. Although we might somehow be able to distribute the cases across multiple threads/processes, it is the author's opinion - and that of SDC tech leads and other experienced colleagues - that it's preferable to re-instate the stored procedure instead of spending a substantial amount of time and effort to refactor this part of the process.
+The stored procedure or large block of hard-coded native SQL, was able to perform the same function as the current code in a few seconds, as opposed to many hours. Although we might somehow be able to distribute the cases across multiple threads/processes, it is the author's opinion - and that of SDC tech leads and other experienced colleagues - that it's preferable to re-instate the stored procedure instead of spending a substantial amount of time and effort to refactor this part of the process.
 
 ## Distribution of Actions
 
