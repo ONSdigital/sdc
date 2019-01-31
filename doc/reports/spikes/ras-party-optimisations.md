@@ -246,31 +246,7 @@ Loading testing can tell us where the problem will reoccur, but this can't be do
 
 The flow of a request through the system is:
 
-```mermaid
-
-graph LR;
-  CF(Cloudfoundry)
-  GU(GUnicorn)
-  F(Flask)
-  DQB[Calls to SQL Alchemy]
-  SQLA(SQL Alchemy)
-  PG(Postgres)
-
-  OA1(Other App Workers)
-  
-  style OA1 stroke-dasharray: 2, 2
-
-  CF-->GU
-  GU-->F
-  GU-.Repeated for each GUnicorn worker.->OA1
-  subgraph AppWorker
-  F-->DQB
-  F-->SQLA
-  end
-
-  SQLA-->PG
-  DQB-->PG
-```
+![](./ras-party-structure.png)
 
 We can eliminate some of these because we have not included them in current tests, but have still seen issues.  This _doesn't_ mean they aren't the cause of issues, but that they aren't the cause of the issues we've seen thus far in these tests.
 
@@ -419,7 +395,7 @@ _NB: Mean average rounded to nearest whole millisecond_
 
 ##### Time series dataset graph
 
-![](../../../response-times-graph-single-route-100-connections.png)
+![](./response-times-graph-single-route-100-connections.png)
 
 ###### Graph interpretation
 
