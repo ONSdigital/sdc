@@ -1,6 +1,6 @@
-# RAS Party optimisations - caching
+# RAS Party optimisations report
 
-- [RAS Party optimisations - caching](#ras-party-optimisations---caching)
+- [RAS Party optimisations report](#ras-party-optimisations-report)
   - [Introduction](#introduction)
   - [Approach](#approach)
   - [Generation of metrics](#generation-of-metrics)
@@ -35,7 +35,18 @@
         - [Single route with 500 connections](#single-route-with-500-connections)
         - [Comments](#comments)
       - [Single route with 100 connections](#single-route-with-100-connections)
-      - [Testing changes to GUnicorn settings.](#testing-changes-to-gunicorn-settings)
+        - [Time series dataset graph](#time-series-dataset-graph)
+          - [Graph interpretation](#graph-interpretation)
+      - [Testing adding indexes to database](#testing-adding-indexes-to-database)
+  - [Conclusions](#conclusions)
+    - [Route caching on GET routes](#route-caching-on-get-routes)
+      - [Advantages](#advantages)
+      - [Disadvantages/Weaknesses](#disadvantagesweaknesses)
+      - [Open questions](#open-questions)
+    - [Optimising table indices](#optimising-table-indices)
+    - [Improving error handling within flask for uncaught exceptions](#improving-error-handling-within-flask-for-uncaught-exceptions)
+    - [Optimising number of available connections in SQLAlchemy and Database](#optimising-number-of-available-connections-in-sqlalchemy-and-database)
+  - [Approaches not considered in this report](#approaches-not-considered-in-this-report)
 
 ## Introduction
 For ASHE, and also for general benefit, the `ras-party` service needs to be optimised for best performance.  This spike investigates how performance could be improved, what bottlenecks could be found, and what ongoing tasks may be necessary.
@@ -388,4 +399,88 @@ We re-ran the tests with 100 max connections, to see how this eliminated Postgre
 #### Single route with 100 connections
 Following the 500 connection attempt we saw - we ran tests again with 100 connections, on the hypothesis that this should increase
 
-#### Testing changes to GUnicorn settings.
+|       | Requests sent | Function hit | Query started | Query completed |
+|-------|---------------|--------------|---------------|-----------------|
+| Count |4000           |4000          |4000           |4000             |
+
+| Success (`200`) | No Response | `404` | `500` |
+|-----------------|-------------|-------|-------|
+| 100.00          | 0.00        | 0.00  | 0.00  |
+
+Now that we have a 100% success rate, we know that we can achieve perfect or near perfect results by changing configuration settings, so we've isolated those as the best area to test.
+
+With this in mind, we turned out attention to how fast the successful connections are being completed.
+
+| Fastest Response | Slowest Response | Mean Average | Median Average |
+|------------------|------------------|--------------|----------------|
+| 17ms             | 28566ms          | 7773ms       | 6912ms         |
+
+_NB: Mean average rounded to nearest whole millisecond_
+
+##### Time series dataset graph
+
+![](../../../response-times-graph-single-route-100-connections.png)
+
+###### Graph interpretation
+
+The graph shows a number of clear points of interest:
+* Response times remain within a sub 100ms window for the first ~1600 requests, then sporadically increase and decrease
+* Response times then stay generally under 1s until ~1700 requests, with occasional outliers taking 1-2s
+* After this, they ramp up steadily, until they reach a plateau of ~16s response times, and sustain this.
+* Times ramp down again towards the end - looking at the data, this is occurring as the spacing of requests increases.
+* At all times after the time when times have started to increase, there are outliers with very much higher response times.
+
+#### Testing adding indexes to database
+After adding indices to the database as opportunities were identified, the result changed to:
+
+| Fastest Response | Slowest Response | Mean Average | Median Average |
+|------------------|------------------|--------------|----------------|
+| 15ms             | 31598ms          | 7519ms       | 5518ms         |
+
+This isn't surprising though, as the optimisations made were largely to help with relationships between tables, and indexing of specific tables, none of which are involved in the queries the hammer tests have made.
+
+I expect that making the changes to indices will improve matters significantly, given the change in Postgres table scans Andrew Torrance saw when he implemented them.
+
+## Conclusions
+
+From the tests run against the endpoints I used, it's become clear that a number of changes would be of use:
+
+### Route caching on GET routes
+Even using the basic `SimpleCache` from Werkzeug, with the settings suggested on the Flask documentation, provided a massive improvement in response times, so implementation of caching for fetched data should be implemented now that we have established where other issues were.
+
+#### Advantages
+Caching significantly reduces the load on the database when implemented thoughtfully, with well consider configuration settings.
+
+#### Disadvantages/Weaknesses
+Optimally setting up the caching may be a trial and error process, and will only be easy to implement for GET routes, with caching for any delivery of data (PUT/POST/PATCH/UPDATE routes) being a more complex task with indeterminate gain.
+
+#### Open questions
+  
+* Whether to use Simplecache, or a more complex system like Memcached
+* What caching times and invalidation criteria would be optimal
+* Which routes would most benefit from caching.
+* How up to date do different types of information returned by party need to be?
+
+Overall, I think simplecache offers a nice quick win approach that is unlikely to cause problems if used relatively conservatively.  With a simple implementation the worst case scenario should be that it doesn't end up a benefit, and a best case should be that it reduces load on the database.
+
+### Optimising table indices
+Andrew Torrance's work in optimising the indices of various database tables allowed him to reduce table scans within the repo siginificantly, and this will reduce load on the database.  It's not been possible to determine exactly how much benefit this offers, but it is unlikely to cause any harm.  Once a performance environment is available, we can use the pre-existing JMeter setup to see how beneficial these changes are, but regardless they are already done, and able to be put into use.
+
+### Improving error handling within flask for uncaught exceptions
+Better handling of errors within Flask may have been able to expose the thread based errors that were occuring when SQLAlchemy ran out of connections in pool, and could have exposed this issue earlier on.  A small effort to see if these can be caught more easily may be worthwhile.
+
+This is unlikely to offer any benefit, but if it does lead to exposing errors not caught by the logger in future, that benefit would be significant - it's likely not needed but would give great benefit if it were.
+
+A short spike into methods for catching these errors is warranted, but its priority is probably not high.
+
+### Optimising number of available connections in SQLAlchemy and Database
+This seems to be the single highest optimisation we could make.  Even basic "finger in the air" estimates on this made large improvements to the performance of the app, and a more sustained and calculated effort to make these changes in the most optimal way would likely be the factor that causes the greatest performance increase of any approach.
+
+On the downside, it's very hard to know what settings should be, and so a trial and error approach is likely to be needed, but conversely, we can likely improve the situation easily with even our first efforts, and iterate from there.
+
+## Approaches not considered in this report
+A few other approaches were not tested in the report that could be worthy of investigation, probably after a performance environment is available:
+
+* Network level caching: Taking caching to the network layer, rather than the app layer, using something like NGinx + Memcached
+* Database caching: Data layer level caches
+* Optimising GUnicorn worker settings
