@@ -8,7 +8,7 @@ All of these metrics should be radiated on monitors
 * **Current concurrent users** - This can be pulled most easily from Google Analytics
 * **Peak concurrent users** - As above, but the maximum for the last 24h/72h/7d
 ### Physical
-* **Diego cell usage** - This can be pulled from Cloudwatch. It's a candidate for alerting into Slack (and does currently alert), but note that Diego Cell balancing can often be poor (consider alerting if a significant number of DCs are maxed or the average load exceeds x%) and alerts are currently somewhat ignored due to volume.
+* **Diego cell usage** - This can be pulled from Cloudwatch. It's a candidate for alerting into Slack (and does currently alert), but note that Diego Cell balancing can often be poor (consider alerting if a significant number of DCs are maxed or the average load exceeds x%)
 * **Database CPU%** - This can be pulled from Cloudwatch or by passing DB physical metrics into Splunk. This is a very good candidate for alerting into Slack, as going above 80% is usually a precursor to a collapse in system performance
 ### Platform 
 * **App crashes** - This can be pulled from CloudFoundry or Splunk. It can be a candidate for alerting, but would need to be set to an appropriate threshold - single app crashes are usually fine and don't require investigation while multiple in short order need flagging up
