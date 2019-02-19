@@ -23,6 +23,7 @@ All of these metrics should be radiated on monitors
 ### Platform 
 
 * **App crashes** - This can be pulled from CloudFoundry or Splunk. It can be a candidate for alerting, but would need to be set to an appropriate threshold - single app crashes are usually fine and don't require investigation while multiple in short order need flagging up.
+* **App uptime** - This is currently measured on frontstage but should be extended to response-operations-ui using updown.io. This may want to be moved to something else.
 
 ## Pre-prod metrics
 
