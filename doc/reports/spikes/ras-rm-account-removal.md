@@ -51,6 +51,5 @@ From the looks of things, this should be unaffected.  If the party_id isn't foun
 ### Things to consider
  - Is it okay that any messages that were sent while the user had an account are still there?  If not, there is only one schema to look at (securemessage) that has 4 tables.   From the party_id gathered at the start, it's possible to delete the messages, the status states and finally the record of the thread in the conversations table.
  - Do we need to ensure the respondent with the account has completed all of their surveys?  I imagine so.  How would we do that?
- - Deleting from the business and business attributes table sounds easy, but what is the knockon effect from it?  If deleting businesses isn't possible then deleting the account is going to be very difficult because of the structure of the data.
  - Script or inbuilt functionality in response-operations-ui? I would recommend to creating the feature in response-operations-ui to take as many manual steps out of the process as possible.
  Endpoints on the ras-party and auth service API should be created to do this programatically.  Doing it this way should lead to less mistakes, easier rollbacks if a mistake does occur and clearer logging output to help debug any issues.
