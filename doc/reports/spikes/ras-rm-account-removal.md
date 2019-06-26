@@ -21,17 +21,13 @@ I'll go service by service that could be affected by the account removal.  Each 
 #### ras-party
 From the steps below, it's possible to unpick an account but the order is important because of foreign/composite/primary keys.  Once the order is determined then it should be possible to automate it.  This order looks roughly like:
 
+
   - Identify which respondent needs to be removed in `partysvc -> respondent`.  Make a note of the id, party_uuid and email address.
   - In the `party_svc -> business_respondent` table, identify all of the `business_id`s that have a respondent_id that is the same as the id obtained in the previous step.
 
-For each one of those business_ids repeat the steps below.
-
- - Remove from `partysvc -> business_attributes` where the `business_id` is the party_uuid from business.
- - Remove all of the records from `partysvc -> enrolment` where the respondent_id matches the id (from the first step).  There is a composite key of business_id and respondent_id between enrolment and business_respondent tables.
- - Remove from `partysvc -> business` where the party_uuid is the business_ids in the business_respondent table
- - Remove all of the records with the id from `partysvc -> business_respondent` -> respondent_id. The 'id' of the respondant is a foreign key of respondent id in the business_respondant table.
- - Remove from `partysvc -> respondent` by email address.  
-
+   - Remove all of the records from `partysvc -> enrolment` where the respondent_id matches the id (from the first step).  There is a composite key of business_id and respondent_id between enrolment and business_respondent tables.
+   - Remove all of the records with the id from `partysvc -> business_respondent` -> respondent_id. The 'id' of the respondant is a foreign key of respondent id in the business_respondant table.
+   - Remove from `partysvc -> respondent` by email address.
 
 #### ras-rm-auth-service and django-oauth2-test
 Doing the above will make it so that the user cannot log in.  To remove the record of the user from the system, you also have to do the following
