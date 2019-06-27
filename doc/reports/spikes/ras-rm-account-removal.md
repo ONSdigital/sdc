@@ -6,13 +6,19 @@ There seem to be 2 ways to do this, these are
 Below I'll detail the rough steps involved for both appraoches, as well as any other considerations that need to be made
 
 # Obfuscating personal details
-  - Change email in `partysvc -> respondent`
-  - Change email in `auth -> user` (if using ras-rm-auth-service)
+  - Change email, first_name, last_name and telephone in `partysvc -> respondent`.  Also get the id for the user at this point.
+  - Change each enrolment to 'DISABLED' for each respondent_id that matches the id from the previous step.  This step might not be correct to do as I believe we have functionality
+  in response-operations-ui to do this via the front door (the website) rather then the backdoor (the database)
+  - Change username in `auth -> user` (if using ras-rm-auth-service)
   - Change email in `public -> credentials_oauthuser` (if using django-oauth service)
 
 With obfuscation being a light touch approach to removing the record of an account, the messages that were sent between the ONS and the respondent can remain untouched as secure-message only ever dealt in uuids from party and never names.
 
-This should be done via an endpoint in ras-party and the auth service (whichever one is being used) as opposed to a script.
+### Things to consider
+ - This should be done via an endpoint in ras-party and the auth service (whichever one is being used) as opposed to a script.
+ - If the respondents enrolments aren't disabled then emails will be sent to the new obfuscated email address.  We would either need to code for this (probably bad, edge cases
+ and special strings generally lead to an unmaintainable system down the line) or just send bad emails.  Both options seem bad so ensuring the enrolment is disabled first would be important.
+ - Should we have a special designated name for these obfuscated accounts like 'Deleted User' being first and last names? What about the email address?
 
 # Deleting respondent entirely
 
