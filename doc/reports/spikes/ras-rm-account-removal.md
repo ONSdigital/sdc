@@ -59,3 +59,4 @@ From the looks of things, this should be unaffected.  If the party_id isn't foun
  - Do we need to ensure the respondent with the account has completed all of their surveys?  I imagine so.  How would we do that?
  - Script or inbuilt functionality in response-operations-ui? I would recommend to creating the feature in response-operations-ui to take as many manual steps out of the process as possible.
  Endpoints on the ras-party and auth service API should be created to do this programatically.  Doing it this way should lead to less mistakes, easier rollbacks if a mistake does occur and clearer logging output to help debug any issues.
+ - There's a metadata column in caseevent that records the partyId of the user that completed the survey. Will response-ops fall over of this partyid no longer exists? This should be removed.
