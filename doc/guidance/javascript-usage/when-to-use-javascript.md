@@ -9,6 +9,7 @@
   - [Tooling](#tooling)
 - [What we can't do with Javascript](#what-we-cant-do-with-javascript)
   - [Use frontend frameworks](#use-frontend-frameworks)
+  - [Form validation](#form-validation)
 
 ### Introduction
 
@@ -62,5 +63,11 @@ For accessibility and browser support reasons, there are far more things you can
 We can't use systems like React or Angular on the front-end, as they don't render a page at all without javascript running.
 
 We could use these types of systems with server side rendering systems, where available, but these have some limitations, and complications, and so this should be considered when assessing possibilities.
+
+#### Form validation
+
+It's possible to use Javascript for form validation and still remain acceptable to GDS, but only if the form validation is also done by the server, and the server presents the same error output as the Javascript would.  At that point, although we could use Javascript for the validation, we'd be writing it twice for a small gain, so this is _usually_ pointless and unneeded.
+
+Javascript cannot be used as the sole form validation, except when run on the server side.
 
 
