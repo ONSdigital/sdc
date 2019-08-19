@@ -13,6 +13,7 @@
   - [Animation](#animation)
 - [Final notes](#final-notes)
   - [Turning off Javascript isn't the problem](#turning-off-javascript-isnt-the-problem)
+  - [Further Reading](#further-reading)
 
 ### Introduction
 
@@ -118,3 +119,13 @@ Graceful degradation is the principle that if you use browser features that are 
 - Show any obviously unintended effects, e.g. broken page layouts.
 - Cease to function, nor break other scripts on the page (code must be error tolerant of the failed browser feature)
 - Fail to offer vital features
+
+#### Further Reading
+
+Some useful resources:
+
+- [List of GDS resources about JS](gds-resources-on-js.md)
+- [Modular JS and bundling within response-ops UI*](https://github.com/ONSdigital/response-operations-ui/blob/master/docs/frontend/Bundling%20with%20Webpack%20and%20Babel.md)
+- [Modern JS features on response-ops-ui*](https://github.com/ONSdigital/response-operations-ui/blob/master/docs/frontend/Modern-JS-features.md)
+
+> \* These resources are specific to the approaches in the response operations UI repo, but contain much generically applicable information too.
